@@ -20,7 +20,7 @@ namespace ThreadStateDemo
 
             Thread thread3 = new Thread(SomeMethod)
             {
-                Name = "Thread 2"
+                Name = "Thread 3"
             };
 
             thread1.Start();
