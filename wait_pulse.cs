@@ -39,7 +39,7 @@ class Program
         lock (lockObject)
         {
             Console.WriteLine("Thread 2 is running...");
-            Thread.Sleep(3000); // Simulate some work for 2 seconds
+            Thread.Sleep(2000); // Simulate some work for 2 seconds
 
             Console.WriteLine("Thread 2 is notifying Thread 1...");
             Monitor.Pulse(lockObject);
