@@ -1,71 +1,60 @@
+//One way chat
+
 using System;
-using System.Collections.Generic;
 using System.Threading;
 
 class Program
 {
-    static Queue<string> messageQueue = new Queue<string>();
-    static object lockObject = new object();
+    static readonly object lockObject = new object();
+    static string message = "";
 
     static void Main(string[] args)
     {
-        // Start a thread for sending messages
-        Thread senderThread = new Thread(SendMessages);
-        senderThread.Start();
+        Thread senderThread = new Thread(SendMessage);
+        Thread receiverThread = new Thread(ReceiveMessage);
 
-        // Start a thread for receiving messages
-        Thread receiverThread = new Thread(ReceiveMessages);
+        senderThread.Start();
         receiverThread.Start();
 
-        // Keep the main thread running
+        senderThread.Join();
+        receiverThread.Join();
+    }
+
+    static void SendMessage()
+    {
         while (true)
         {
-            // Read user input and send it as a message
-            Console.Write("You: ");
-            string message = Console.ReadLine();
+            Console.WriteLine("Enter your message (or type 'exit' to quit):");
+            string input = Console.ReadLine();
+
             lock (lockObject)
             {
-                messageQueue.Enqueue(message);
-                Monitor.PulseAll(lockObject); // Notify receiver thread
+                if (input.ToLower() == "exit")
+                {
+                    message = "exit";
+                    break;
+                }
+
+                message = input;
             }
         }
     }
 
-    static void SendMessages()
+    static void ReceiveMessage()
     {
         while (true)
         {
-            string message;
             lock (lockObject)
             {
-                while (messageQueue.Count == 0)
+                if (message.ToLower() == "exit")
+                    break;
+
+                if (!string.IsNullOrEmpty(message))
                 {
-                    Monitor.Wait(lockObject); // Wait for messages to be available
+                    Console.WriteLine("Received: " + message);
+                    message = "";
                 }
-                message = messageQueue.Dequeue();
             }
-
-            // Simulate sending the message
-            Console.WriteLine($"Sent: {message}");
-        }
-    }
-
-    static void ReceiveMessages()
-    {
-        while (true)
-        {
-            string message;
-            lock (lockObject)
-            {
-                while (messageQueue.Count == 0)
-                {
-                    Monitor.Wait(lockObject); // Wait for messages to be available
-                }
-                message = messageQueue.Dequeue();
-            }
-
-            // Simulate receiving and displaying the message
-            Console.WriteLine($"Received: {message}");
         }
     }
 }
