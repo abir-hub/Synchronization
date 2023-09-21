@@ -9,7 +9,7 @@ public class Account
 
     public Account(decimal initialBalance) => balance = initialBalance;
 
-    public decimal Debit(decimal amount)
+    public decimal withDraw(decimal amount)
     {
         if (amount < 0)
         {
@@ -28,7 +28,7 @@ public class Account
         return appliedAmount;
     }
 
-    public void Credit(decimal amount)
+    public void Deposit(decimal amount)
     {
         if (amount < 0)
         {
@@ -73,17 +73,15 @@ class AccountTest
         {
             if (amount >= 0)
             {
-                account.Credit(amount);
+                account.Deposit(amount);
             }
             else
             {
-                account.Debit(Math.Abs(amount));
+                account.withDraw(Math.Abs(amount));
             }
         }
     }
 }
-
-
 
 
 
