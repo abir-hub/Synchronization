@@ -103,22 +103,22 @@ class Account
 {
     private readonly object balLock = new object();
     private string name;
-    private double amount;
+    private double balance;
 
     public Account(string name, double initialAmount)
     {
         this.name = name;
-        this.amount = initialAmount;
+        this.balance = initialAmount;
     }
 
     public void Withdraw(double withdrawalAmount)
     {
         lock (balLock)
         {
-            if (withdrawalAmount > 0 && withdrawalAmount <= amount)
+            if (withdrawalAmount > 0 && withdrawalAmount <= balance)
             {
-                amount -= withdrawalAmount;
-                Console.WriteLine($"{name} withdrew ${withdrawalAmount}. New balance: ${amount}");
+                balance -= withdrawalAmount;
+                Console.WriteLine($"{name} withdrew ${withdrawalAmount}. New balance: ${balance}");
             }
             else
             {
@@ -133,8 +133,8 @@ class Account
         {
             if (depositAmount > 0)
             {
-                amount += depositAmount;
-                Console.WriteLine($"{name} deposited ${depositAmount}. New balance: ${amount}");
+                balance += depositAmount;
+                Console.WriteLine($"{name} deposited ${depositAmount}. New balance: ${balance}");
             }
             else
             {
@@ -147,7 +147,7 @@ class Account
     {
         lock (balLock)
         {
-            Console.WriteLine($"{name}'s account balance: ${amount}");
+            Console.WriteLine($"{name}'s account balance: ${balance}");
         }
     }
 }
